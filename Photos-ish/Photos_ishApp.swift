@@ -11,7 +11,7 @@ import SwiftUI
 struct Photos_ishApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            GridView()
         }
     }
 }
