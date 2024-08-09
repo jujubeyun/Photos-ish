@@ -10,6 +10,7 @@ import SwiftUI
 struct GridView: View {
     @State var images: [CatImage] = []
     @State var isFetching = true
+    @State var scrolledID: CatImage?
     let columnCount = 3
     
     var body: some View {
@@ -26,6 +27,7 @@ struct GridView: View {
                         }
                     }
                 }
+                .scrollPosition(id: $scrolledID, anchor: .bottom)
                 
                 if isFetching {
                     LoadingView()
@@ -36,6 +38,7 @@ struct GridView: View {
             do {
                 images = try await NetworkManager.shared.fetchCatImages()
                 isFetching = false
+                scrolledID = images.last
             } catch {
                 // TODO: - handle errors
                 print(error)
