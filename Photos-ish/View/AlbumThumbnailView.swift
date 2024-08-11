@@ -9,6 +9,8 @@ import SwiftUI
 
 struct AlbumThumbnailView: View {
     
+    @Binding var alertType: AlertType?
+    @Binding var isShowingAlert: Bool
     let isEditing: Bool
     let album: Album
     
@@ -43,7 +45,7 @@ struct AlbumThumbnailView: View {
         .overlay(alignment: .topLeading) {
             if isEditing && album.isEditable { deleteButton }
         }
-        .opacity(isEditing && !album.isEditable ? 0.5 : 1)
+        .opacity(isEditing && !album.isEditable ? 0.3 : 1)
         .animation(.easeInOut, value: isEditing)
     }
     
@@ -64,7 +66,8 @@ struct AlbumThumbnailView: View {
     
     var deleteButton: some View {
         Button {
-            
+            alertType = .delete(album: album)
+            isShowingAlert = true
         } label: {
             ZStack {
                 Circle()
@@ -81,5 +84,5 @@ struct AlbumThumbnailView: View {
 }
 
 #Preview {
-    AlbumThumbnailView(isEditing: true,album: Album(name: "Test", date: Date(), isEditable: true))
+    AlbumThumbnailView(alertType: .constant(.add), isShowingAlert: .constant(false), isEditing: true,album: Album(name: "Test", date: Date(), isEditable: true))
 }

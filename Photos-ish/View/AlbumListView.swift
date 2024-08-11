@@ -12,6 +12,7 @@ struct AlbumListView: View {
     @Environment(\.modelContext) var context
     @Query(sort: [SortDescriptor<Album>(\.date, order: .forward)]) var albums: [Album]
     @State var isShowingAlert: Bool = false
+    @State var alertType: AlertType?
     @State var titleText = ""
     @State var isEditing = false
     
@@ -20,7 +21,10 @@ struct AlbumListView: View {
             ScrollView {
                 LazyVGrid(columns: .init(repeating: .init(.flexible()), count: 2), spacing: 16) {
                     ForEach(albums) { album in
-                        AlbumThumbnailView(isEditing: isEditing, album: album)
+                        AlbumThumbnailView(alertType: $alertType, 
+                                           isShowingAlert: $isShowingAlert,
+                                           isEditing: isEditing,
+                                           album: album)
                     }
                 }
                 .padding()
@@ -28,7 +32,7 @@ struct AlbumListView: View {
             .navigationTitle("Albums")
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button("", systemImage: "plus") { isShowingAlert = true }
+                    Button("", systemImage: "plus") { showAlert(alertType: .add) }
                 }
                 
                 ToolbarItem(placement: .topBarTrailing) {
@@ -43,15 +47,24 @@ struct AlbumListView: View {
                 }
                 
             }
-            .alert("New Album", isPresented: $isShowingAlert) {
-                TextField("Title", text: $titleText)
-                    .font(.footnote)
-                Button("Save") { saveAlbum() }
-                Button("Cancel", role: .cancel) { titleText = "" }
-            } message: {
-                Text("Enter a name for this album.")
-            }
+            .alert(alertType?.title ?? "Alert", isPresented: $isShowingAlert, presenting: alertType) { alert in
+                switch alert {
+                case .add:
+                    TextField(alert.title, text: $titleText)
+                        .font(.footnote)
+                    Button("Save") { saveAlbum() }
+                    Button("Cancel", role: .cancel) { titleText = "" }
+                case .delete(let album):
+                    Button("Delete", role: .destructive) { context.delete(album) }
+                    Button("Cancel", role: .cancel) {}
+                }
+            } message: { alert in Text(alert.message) }
         }
+    }
+    
+    private func showAlert(alertType: AlertType) {
+        self.alertType = alertType
+        isShowingAlert = true
     }
     
     private func saveAlbum() {
