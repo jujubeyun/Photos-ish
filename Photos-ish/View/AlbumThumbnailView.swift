@@ -9,23 +9,30 @@ import SwiftUI
 
 struct AlbumThumbnailView: View {
     
+    let isEditing: Bool
     let album: Album
     
+    var lastPhotoURLString: String? {
+        album.photos.sorted { $0.date < $1.date }.first?.url
+    }
+    
     var body: some View {
-        let latestPhoto = album.photos.sorted { $0.date < $1.date }.first
-        
         VStack(alignment: .leading, spacing: 0) {
-            if let urlString = latestPhoto?.url {
-                RemoteImageView(urlString: urlString)
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: UIScreen.main.bounds.width/2.3,
-                           height: UIScreen.main.bounds.width/2.3)
-                    .clipShape(.rect(cornerRadius: 8))
-            } else {
-                placeholder
+            AsyncImage(url: URL(string: lastPhotoURLString ?? "")) { phase in
+                switch phase {
+                case .success(let image):
+                    image
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: UIScreen.main.bounds.width/2.3,
+                               height: UIScreen.main.bounds.width/2.3)
+                        .clipShape(.rect(cornerRadius: 8))
+                default:
+                    placeholder
+                }
             }
             
-            Spacer(minLength: 4)
+            Spacer()
                 
             Text(album.name)
                 .font(.subheadline)
@@ -33,6 +40,11 @@ struct AlbumThumbnailView: View {
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
         }
+        .overlay(alignment: .topLeading) {
+            if isEditing && album.isEditable { deleteButton }
+        }
+        .opacity(isEditing && !album.isEditable ? 0.5 : 1)
+        .animation(.easeInOut, value: isEditing)
     }
     
     var placeholder: some View {
@@ -49,8 +61,25 @@ struct AlbumThumbnailView: View {
                 .foregroundStyle(Color(.quaternaryLabel))
         }
     }
+    
+    var deleteButton: some View {
+        Button {
+            
+        } label: {
+            ZStack {
+                Circle()
+                    .foregroundStyle(.red)
+                
+                Image(systemName: "minus")
+                    .foregroundStyle(.white)
+                    .imageScale(.small)
+            }
+            .frame(width: 20)
+            .offset(x: -10, y: -10)
+        }
+    }
 }
 
 #Preview {
-    AlbumThumbnailView(album: Album(name: "Test", timestamp: Date()))
+    AlbumThumbnailView(isEditing: true,album: Album(name: "Test", date: Date(), isEditable: true))
 }

@@ -11,14 +11,16 @@ import SwiftData
 @Model
 class Album {
     @Attribute(.unique) let id = UUID()
+    let name: String
     let date: Date
-    var name: String
+    let isEditable: Bool
     
     @Relationship var photos: [Photo]
     
-    init(name: String, timestamp: Date, photos: [Photo] = []) {
+    init(name: String, date: Date, isEditable: Bool = true, photos: [Photo] = []) {
         self.name = name
-        self.date = timestamp
+        self.date = date
+        self.isEditable = isEditable
         self.photos = photos
     }
 }

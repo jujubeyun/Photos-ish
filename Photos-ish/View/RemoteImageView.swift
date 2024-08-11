@@ -27,7 +27,7 @@ struct RemoteImage: View {
 
 struct RemoteImageView: View {
     
-    var imageLoader = ImageLoader()
+    let imageLoader = ImageLoader()
     let urlString: String
     
     var body: some View {

@@ -13,13 +13,14 @@ struct AlbumListView: View {
     @Query(sort: [SortDescriptor<Album>(\.date, order: .forward)]) var albums: [Album]
     @State var isShowingAlert: Bool = false
     @State var titleText = ""
+    @State var isEditing = false
     
     var body: some View {
         NavigationStack {
             ScrollView {
                 LazyVGrid(columns: .init(repeating: .init(.flexible()), count: 2), spacing: 16) {
                     ForEach(albums) { album in
-                        AlbumThumbnailView(album: album)
+                        AlbumThumbnailView(isEditing: isEditing, album: album)
                     }
                 }
                 .padding()
@@ -27,15 +28,11 @@ struct AlbumListView: View {
             .navigationTitle("Albums")
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button("", systemImage: "plus") {
-                        isShowingAlert = true
-                    }
+                    Button("", systemImage: "plus") { isShowingAlert = true }
                 }
                 
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Edit") {
-                        
-                    }
+                    Button(isEditing ? "Done" : "Edit") { isEditing.toggle() }
                 }
             }
             .task {
@@ -58,17 +55,17 @@ struct AlbumListView: View {
     }
     
     private func saveAlbum() {
-        let newAlbum = Album(name: titleText, timestamp: Date())
+        let newAlbum = Album(name: titleText, date: Date())
         context.insert(newAlbum)
         titleText = ""
     }
     
     private func setup() async throws {
         guard albums.isEmpty else { return }
-        let recents = Album(name: "Recents", timestamp: Date())
+        let recents = Album(name: "Recents", date: Date(), isEditable: false)
         let photos = try await fetchPhotos()
         recents.photos = photos
-        let favorites = Album(name: "Favorites", timestamp: Date())
+        let favorites = Album(name: "Favorites", date: Date(), isEditable: false)
         context.insert(recents)
         context.insert(favorites)
     }
