@@ -6,20 +6,26 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct AlbumListView: View {
+    @Environment(\.modelContext) var context
+    @Query(sort: [SortDescriptor<Album>(\.date, order: .forward)]) var albums: [Album]
+    
     var body: some View {
         NavigationStack {
             ScrollView {
                 LazyVGrid(columns: .init(repeating: .init(.flexible()), count: 2), spacing: 16) {
-                    ForEach(0..<2) { i in
+                    ForEach(albums) { album in
+                        let latestPhoto = album.photos.sorted { $0.date < $1.date }.first
+                        
                         VStack(alignment: .leading, spacing: 0) {
-                            placeholder
+                            Thumbnail(urlString: latestPhoto?.url)
                             
                             Spacer(minLength: 4)
                                 
-                            Text(i == 0 ? "Recents" : "Favorites")
-                            Text(i == 0 ? "30" : "5")
+                            Text(album.name)
+                            Text("\(album.photos.count)")
                                 .foregroundStyle(.secondary)
                         }
                     }
@@ -40,26 +46,39 @@ struct AlbumListView: View {
                     }
                 }
             }
+            .task {
+                do {
+                    try await setup()
+                } catch {
+                    print(error.localizedDescription)
+                }
+                
+            }
         }
     }
     
-    var placeholder: some View {
-        ZStack {
-            Color(.quaternarySystemFill)
-                .imageScale(.large)
-                .frame(width: UIScreen.main.bounds.width/2.3,
-                       height: UIScreen.main.bounds.width/2.3)
-                .clipShape(.rect(cornerRadius: 8))
-            
-            Image(systemName: "photo.on.rectangle")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 50)
-                .foregroundStyle(Color(.quaternaryLabel))
-        }
+    private func setup() async throws {
+        guard albums.isEmpty else { return }
+        let recents = Album(name: "Recents", timestamp: Date())
+        let photos = try await fetchPhotos()
+        recents.photos = photos
+        let favorites = Album(name: "Favorites", timestamp: Date())
+        context.insert(recents)
+        context.insert(favorites)
+    }
+    
+    private func fetchPhotos() async throws -> [Photo] {
+        let images = try await NetworkManager.shared.fetchCatImages()
+        let photos = convert(images: images)
+        return photos
+    }
+    
+    private func convert(images: [CatImage]) -> [Photo] {
+        images.map { Photo(id: $0.id, url: $0.url, date: Date()) }
     }
 }
 
 #Preview {
     AlbumListView()
+        .modelContainer(for: [Album.self])
 }
