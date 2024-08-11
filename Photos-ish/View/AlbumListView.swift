@@ -19,19 +19,7 @@ struct AlbumListView: View {
             ScrollView {
                 LazyVGrid(columns: .init(repeating: .init(.flexible()), count: 2), spacing: 16) {
                     ForEach(albums) { album in
-                        let latestPhoto = album.photos.sorted { $0.date < $1.date }.first
-                        
-                        VStack(alignment: .leading, spacing: 0) {
-                            Thumbnail(urlString: latestPhoto?.url)
-                            
-                            Spacer(minLength: 4)
-                                
-                            Text(album.name)
-                                .font(.subheadline)
-                            Text("\(album.photos.count)")
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                        }
+                        AlbumThumbnailView(album: album)
                     }
                 }
                 .padding()
