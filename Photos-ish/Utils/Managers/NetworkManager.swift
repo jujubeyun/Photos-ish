@@ -45,29 +45,28 @@ final class NetworkManager {
         }
     }
     
-    func downloadImage(fromURLString urlString: String) async throws -> UIImage {
+    func downloadImage(fromURLString urlString: String, completed: @escaping (UIImage?) -> Void) {
         
         let cacheKey = NSString(string: urlString)
         
         if let image = cache.object(forKey: cacheKey) {
-            return image
+            completed(image)
+            return
         }
         
         guard let url = URL(string: urlString) else {
-            throw NetworkError.invalidURL
+            completed(nil)
+            return
         }
         
-        let (data, response) = try await URLSession.shared.data(from: url)
-        
-        guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-            throw NetworkError.invalidResponse
-        }
-
-        if let image = UIImage(data: data) {
+        URLSession.shared.dataTask(with: URLRequest(url: url)) { data, response, error in
+            guard let data = data, let image = UIImage(data: data) else {
+                completed(nil)
+                return
+            }
+            
             self.cache.setObject(image, forKey: cacheKey)
-            return image
-        } else {
-            throw NetworkError.invalidData
-        }
+            completed(image)
+        }.resume()
     }
 }

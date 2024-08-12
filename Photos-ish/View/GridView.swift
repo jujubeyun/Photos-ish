@@ -6,11 +6,11 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct GridView: View {
-    @State var images: [CatImage] = []
-    @State var isFetching = true
-    @State var scrolledID: CatImage?
+    let photos: [Photo]
+    @State var scrolledID: Photo?
     let columnCount = 3
     
     var body: some View {
@@ -18,8 +18,8 @@ struct GridView: View {
             ZStack {
                 ScrollView {
                     LazyVGrid(columns: .init(repeating: .init(.flexible()), count: columnCount), spacing: 2) {
-                        ForEach(images, id: \.self) { image in
-                            RemoteImageView(urlString: image.url)
+                        ForEach(photos, id: \.self) { photo in
+                            RemoteImageView(urlString: photo.url)
                                 .aspectRatio(contentMode: .fill)
                                 .frame(width: geometry.size.width/CGFloat(columnCount),
                                        height: geometry.size.width/CGFloat(columnCount))
@@ -28,25 +28,15 @@ struct GridView: View {
                     }
                 }
                 .scrollPosition(id: $scrolledID, anchor: .bottom)
-                
-                if isFetching {
-                    LoadingView()
-                }
             }
         }
-        .task {
-            do {
-                images = try await NetworkManager.shared.fetchCatImages()
-                isFetching = false
-                scrolledID = images.last
-            } catch {
-                // TODO: - handle errors
-                print(error)
-            }
+        .onAppear {
+            scrolledID = photos.last 
         }
     }
 }
 
 #Preview {
-    GridView()
+    GridView(photos: [])
+        .modelContainer(for: [Photo.self])
 }

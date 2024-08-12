@@ -15,33 +15,36 @@ struct AlbumThumbnailView: View {
     let album: Album
     
     var lastPhotoURLString: String? {
-        album.photos.sorted { $0.date < $1.date }.first?.url
+        album.photos.sorted { $0.date < $1.date }.last?.url
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            AsyncImage(url: URL(string: lastPhotoURLString ?? "")) { phase in
-                switch phase {
-                case .success(let image):
-                    image
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: UIScreen.main.bounds.width/2.3,
-                               height: UIScreen.main.bounds.width/2.3)
-                        .clipShape(.rect(cornerRadius: 8))
-                default:
-                    placeholder
+        NavigationLink(value: album) {
+            VStack(alignment: .leading, spacing: 0) {
+                AsyncImage(url: URL(string: lastPhotoURLString ?? "")) { phase in
+                    switch phase {
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: UIScreen.main.bounds.width/2.3,
+                                   height: UIScreen.main.bounds.width/2.3)
+                            .clipShape(.rect(cornerRadius: 8))
+                    default:
+                        placeholder
+                    }
                 }
-            }
-            
-            Spacer()
                 
-            Text(album.name)
-                .font(.subheadline)
-            Text("\(album.photos.count)")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+                Spacer()
+                    
+                Text(album.name)
+                    .font(.subheadline)
+                Text("\(album.photos.count)")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
         }
+        .buttonStyle(PlainButtonStyle())
         .overlay(alignment: .topLeading) {
             if isEditing && album.isEditable { deleteButton }
         }
@@ -84,5 +87,7 @@ struct AlbumThumbnailView: View {
 }
 
 #Preview {
-    AlbumThumbnailView(alertType: .constant(.add), isShowingAlert: .constant(false), isEditing: true,album: Album(name: "Test", date: Date(), isEditable: true))
+    AlbumThumbnailView(alertType: .constant(.add), 
+                       isShowingAlert: .constant(false),
+                       isEditing: true,album: Album(name: "Test", date: Date(), isEditable: true))
 }

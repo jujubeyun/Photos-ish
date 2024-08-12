@@ -29,6 +29,7 @@ struct AlbumListView: View {
                 }
                 .padding()
             }
+            .navigationDestination(for: Album.self) { album in GridView(photos: album.photos.sorted { $0.date < $1.date }) }
             .navigationTitle("Albums")
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {

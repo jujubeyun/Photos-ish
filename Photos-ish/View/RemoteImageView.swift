@@ -7,12 +7,17 @@
 
 import SwiftUI
 
-@Observable final class ImageLoader {
-    var image: Image? = nil
+final class ImageLoader: ObservableObject {
     
-    func load(fromURLString urlString: String) async throws {
-        let uiImage = try await NetworkManager.shared.downloadImage(fromURLString: urlString)
-        image = Image(uiImage: uiImage)
+    @Published var image: Image? = nil
+    
+    func load(fromURLString urlString: String) {
+        NetworkManager.shared.downloadImage(fromURLString: urlString) { uiImage in
+            guard let uiImage = uiImage else { return }
+            DispatchQueue.main.async {
+                self.image = Image(uiImage: uiImage)
+            }
+        }
     }
 }
 
@@ -27,18 +32,11 @@ struct RemoteImage: View {
 
 struct RemoteImageView: View {
     
-    let imageLoader = ImageLoader()
+    @StateObject var imageLoader = ImageLoader()
     let urlString: String
     
     var body: some View {
         RemoteImage(image: imageLoader.image)
-            .task {
-                do {
-                    try await imageLoader.load(fromURLString: urlString)
-                } catch {
-                    // TODO: - handle errors
-                    print(error)
-                }
-            }
+            .onAppear { imageLoader.load(fromURLString: urlString) }
     }
 }
