@@ -92,8 +92,8 @@
 		6BFD55B12C65FF4100924393 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				6BFD55B22C65FF4800924393 /* Managers */,
 				6BBC84C02C691080002295E8 /* Alert.swift */,
+				6BFD55B22C65FF4800924393 /* Managers */,
 			);
 			path = Utils;
 			sourceTree = "<group>";

@@ -22,15 +22,33 @@ struct PhotoPagingView: View {
                         .containerRelativeFrame(.horizontal)
                 }
             }
+            .scrollTargetLayout()
         }
         .onAppear { index = selectedIndex }
         .scrollTargetBehavior(.paging)
         .scrollIndicators(.hidden)
-        .scrollPosition(id: $index, anchor: .center)
+        .scrollPosition(id: $index)
         .ignoresSafeArea()
+        .toolbar {
+            ToolbarItemGroup(placement: .bottomBar) {
+                let selectedPhoto = photos[index ?? 0]
+                let imageName = selectedPhoto.isFavorite ? "heart.fill" : "heart"
+                Button("favorite", systemImage: imageName) {
+                    selectedPhoto.isFavorite.toggle()
+                }
+                
+                Spacer()
+                
+                Button("delete", systemImage: "trash") {
+                    
+                }
+            }
+        }
     }
 }
 
 #Preview {
-    PhotoPagingView(photos: Photo.samples, selectedIndex: 0)
+    NavigationStack {
+        PhotoPagingView(photos: Photo.samples, selectedIndex: 0)
+    }
 }
