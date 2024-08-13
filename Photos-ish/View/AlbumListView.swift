@@ -30,7 +30,7 @@ struct AlbumListView: View {
                 .padding()
             }
             .navigationDestination(for: Album.self) { album in
-                GridView(photos: album.photos.sorted { $0.date < $1.date })
+                GridView(album: album)
             }
             .navigationTitle("Albums")
             .toolbar {
@@ -41,14 +41,6 @@ struct AlbumListView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(isEditing ? "Done" : "Edit") { isEditing.toggle() }
                 }
-            }
-            .task {
-                do {
-                    try await setup()
-                } catch {
-                    print(error.localizedDescription)
-                }
-                
             }
             .alert(alertType?.title ?? "Alert", isPresented: $isShowingAlert, presenting: alertType) { alert in
                 switch alert {
@@ -75,29 +67,10 @@ struct AlbumListView: View {
         context.insert(newAlbum)
         titleText = ""
     }
-    
-    private func setup() async throws {
-        guard albums.isEmpty else { return }
-        let recents = Album(name: "Recents", date: Date(), isEditable: false)
-        let photos = try await fetchPhotos()
-        recents.photos = photos
-        let favorites = Album(name: "Favorites", date: Date(), isEditable: false)
-        context.insert(recents)
-        context.insert(favorites)
-    }
-    
-    private func fetchPhotos() async throws -> [Photo] {
-        let images = try await NetworkManager.shared.fetchCatImages()
-        let photos = convert(images: images)
-        return photos
-    }
-    
-    private func convert(images: [CatImage]) -> [Photo] {
-        images.map { Photo(id: $0.id, url: $0.url, date: Date()) }
-    }
 }
 
 #Preview {
-    AlbumListView()
-        .modelContainer(for: [Album.self])
+    var shouldCreateDefaults = true
+    return AlbumListView()
+        .modelContainer(AlbumContainer.create(shouldCreateDefaults: &shouldCreateDefaults))
 }

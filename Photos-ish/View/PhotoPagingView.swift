@@ -8,16 +8,17 @@
 import SwiftUI
 
 struct PhotoPagingView: View {
-    
+    @Environment(\.modelContext) var context
     @State var index: Int?
-    let photos: [Photo]
+    @State var isShowingAlert = false
+    let album: Album
     let selectedIndex: Int
     
     var body: some View {
         ScrollView(.horizontal) {
             LazyHGrid(rows: .init(repeating: .init(.flexible()), count: 1), spacing: 0) {
-                ForEach(0..<photos.count, id: \.self) { i in
-                    RemoteImageView(urlString: photos[i].url)
+                ForEach(0..<album.photos.count, id: \.self) { i in
+                    RemoteImageView(urlString: album.photos[i].url)
                         .scaledToFit()
                         .containerRelativeFrame(.horizontal)
                 }
@@ -31,24 +32,25 @@ struct PhotoPagingView: View {
         .ignoresSafeArea()
         .toolbar {
             ToolbarItemGroup(placement: .bottomBar) {
-                let selectedPhoto = photos[index ?? 0]
-                let imageName = selectedPhoto.isFavorite ? "heart.fill" : "heart"
-                Button("favorite", systemImage: imageName) {
-                    selectedPhoto.isFavorite.toggle()
-                }
-                
-                Spacer()
-                
                 Button("delete", systemImage: "trash") {
-                    
+                    isShowingAlert = true
                 }
             }
+        }
+        .confirmationDialog("Delete Photo", isPresented: $isShowingAlert) {
+            Button("Delete Photo", role: .destructive) {
+                guard let index else { return }
+                context.delete(album.photos[index])
+                album.photos.remove(at: index) // to update ui
+            }
+        } message: {
+            Text("This Photo will be deleted from the library.")
         }
     }
 }
 
 #Preview {
     NavigationStack {
-        PhotoPagingView(photos: Photo.samples, selectedIndex: 0)
+        PhotoPagingView(album: Album(name: "test", date: Date()), selectedIndex: 0)
     }
 }

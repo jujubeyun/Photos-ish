@@ -15,7 +15,7 @@ struct AlbumThumbnailView: View {
     let album: Album
     
     var lastPhotoURLString: String? {
-        album.photos.sorted { $0.date < $1.date }.last?.url
+        album.photos.last?.url
     }
     
     var body: some View {
@@ -89,5 +89,6 @@ struct AlbumThumbnailView: View {
 #Preview {
     AlbumThumbnailView(alertType: .constant(.add), 
                        isShowingAlert: .constant(false),
-                       isEditing: true,album: Album(name: "Test", date: Date(), isEditable: true))
+                       isEditing: true,
+                       album: Album(name: "Test", date: Date(),isEditable: true))
 }

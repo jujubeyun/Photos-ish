@@ -10,21 +10,12 @@ import SwiftData
 
 @main
 struct Photos_ishApp: App {
-    var modelContainer: ModelContainer = {
-        let schema = Schema([Album.self, Photo.self])
-        let modelConfiguration = ModelConfiguration(schema: schema)
-        
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
+    @AppStorage("isFirstTimeLaunch") private var isFirstTimeLaunch: Bool = true
     
     var body: some Scene {
         WindowGroup {
             AlbumListView()
-                .modelContainer(modelContainer)
+                .modelContainer(AlbumContainer.create(shouldCreateDefaults: &isFirstTimeLaunch))
         }
     }
 }

@@ -12,6 +12,7 @@
 		6B50AB082C66F517001B2624 /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B50AB072C66F517001B2624 /* Album.swift */; };
 		6B50AB0A2C66FA63001B2624 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B50AB092C66FA63001B2624 /* Photo.swift */; };
 		6B6BE0F92C6A044F00299624 /* PhotoPagingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6BE0F82C6A044F00299624 /* PhotoPagingView.swift */; };
+		6B6BE0FB2C6B2B5E00299624 /* AlbumContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6BE0FA2C6B2B5E00299624 /* AlbumContainer.swift */; };
 		6B8380822C689197001E8EBA /* AlbumThumbnailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B8380812C689197001E8EBA /* AlbumThumbnailView.swift */; };
 		6BBC84C12C691080002295E8 /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BBC84C02C691080002295E8 /* Alert.swift */; };
 		6BD10FD12C65A114003C6BA4 /* Photos_ishApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BD10FD02C65A114003C6BA4 /* Photos_ishApp.swift */; };
@@ -29,6 +30,7 @@
 		6B50AB072C66F517001B2624 /* Album.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
 		6B50AB092C66FA63001B2624 /* Photo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
 		6B6BE0F82C6A044F00299624 /* PhotoPagingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoPagingView.swift; sourceTree = "<group>"; };
+		6B6BE0FA2C6B2B5E00299624 /* AlbumContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumContainer.swift; sourceTree = "<group>"; };
 		6B8380812C689197001E8EBA /* AlbumThumbnailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumThumbnailView.swift; sourceTree = "<group>"; };
 		6BBC84C02C691080002295E8 /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
 		6BD10FCD2C65A114003C6BA4 /* Photos-ish.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Photos-ish.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -94,6 +96,7 @@
 			children = (
 				6BBC84C02C691080002295E8 /* Alert.swift */,
 				6BFD55B22C65FF4800924393 /* Managers */,
+				6B6BE0FA2C6B2B5E00299624 /* AlbumContainer.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -209,6 +212,7 @@
 				6B50AB022C660B3D001B2624 /* LoadingView.swift in Sources */,
 				6B50AB062C664ED9001B2624 /* AlbumListView.swift in Sources */,
 				6BBC84C12C691080002295E8 /* Alert.swift in Sources */,
+				6B6BE0FB2C6B2B5E00299624 /* AlbumContainer.swift in Sources */,
 				6B8380822C689197001E8EBA /* AlbumThumbnailView.swift in Sources */,
 				6B50AB082C66F517001B2624 /* Album.swift in Sources */,
 			);
