@@ -27,7 +27,7 @@ final class NetworkManager {
         "https://api.thecatapi.com/v1/images/search?limit=\(numberOfImages)&api_key=\(api_key)"
     }
     
-    func fetchCatImages() async throws -> [CatImage] {
+    func fetchCatImages() async throws -> [CatResponse] {
         guard let url = URL(string: urlString) else {
             throw NetworkError.invalidURL
         }
@@ -39,7 +39,7 @@ final class NetworkManager {
         }
         
         do {
-            return try JSONDecoder().decode([CatImage].self, from: data)
+            return try JSONDecoder().decode([CatResponse].self, from: data)
         } catch {
             throw NetworkError.invalidData
         }

@@ -20,7 +20,7 @@
 		6BD10FD52C65A115003C6BA4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6BD10FD42C65A115003C6BA4 /* Assets.xcassets */; };
 		6BD10FD82C65A116003C6BA4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6BD10FD72C65A116003C6BA4 /* Preview Assets.xcassets */; };
 		6BFD55B02C65A37F00924393 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BFD55AF2C65A37F00924393 /* NetworkManager.swift */; };
-		6BFD55B52C65FF6700924393 /* CatImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BFD55B42C65FF6700924393 /* CatImage.swift */; };
+		6BFD55B52C65FF6700924393 /* CatResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BFD55B42C65FF6700924393 /* CatResponse.swift */; };
 		6BFD55B82C65FFC700924393 /* RemoteImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BFD55B72C65FFC700924393 /* RemoteImageView.swift */; };
 /* End PBXBuildFile section */
 
@@ -39,7 +39,7 @@
 		6BD10FD42C65A115003C6BA4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6BD10FD72C65A116003C6BA4 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		6BFD55AF2C65A37F00924393 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
-		6BFD55B42C65FF6700924393 /* CatImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatImage.swift; sourceTree = "<group>"; };
+		6BFD55B42C65FF6700924393 /* CatResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatResponse.swift; sourceTree = "<group>"; };
 		6BFD55B72C65FFC700924393 /* RemoteImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteImageView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -114,7 +114,7 @@
 			children = (
 				6B50AB072C66F517001B2624 /* Album.swift */,
 				6B50AB092C66FA63001B2624 /* Photo.swift */,
-				6BFD55B42C65FF6700924393 /* CatImage.swift */,
+				6BFD55B42C65FF6700924393 /* CatResponse.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -202,7 +202,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6BFD55B52C65FF6700924393 /* CatImage.swift in Sources */,
+				6BFD55B52C65FF6700924393 /* CatResponse.swift in Sources */,
 				6BFD55B02C65A37F00924393 /* NetworkManager.swift in Sources */,
 				6BD10FD32C65A114003C6BA4 /* GridView.swift in Sources */,
 				6B6BE0F92C6A044F00299624 /* PhotoPagingView.swift in Sources */,
