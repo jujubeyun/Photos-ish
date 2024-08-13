@@ -32,6 +32,14 @@ struct PhotoPagingView: View {
         .ignoresSafeArea()
         .toolbar {
             ToolbarItemGroup(placement: .bottomBar) {
+                let photo = album.photos[safe: index]
+                let imageName = photo?.isFavorite ?? false ? "heart.fill" : "heart"
+                Button("favorite", systemImage: imageName) {
+                    photo?.isFavorite.toggle()
+                }
+                
+                Spacer()
+                
                 Button("delete", systemImage: "trash") {
                     isShowingAlert = true
                 }
