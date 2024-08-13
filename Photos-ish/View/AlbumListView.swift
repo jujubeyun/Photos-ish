@@ -29,10 +29,8 @@ struct AlbumListView: View {
                 }
                 .padding()
             }
-            .navigationDestination(for: Album.self) { album in
-                GridView(album: album)
-            }
             .navigationTitle("Albums")
+            .navigationDestination(for: Album.self) { album in GridView(album: album) }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("", systemImage: "plus") { showAlert(alertType: .add) }
@@ -40,6 +38,16 @@ struct AlbumListView: View {
                 
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(isEditing ? "Done" : "Edit") { isEditing.toggle() }
+                }
+            }
+            .task {
+                if albums[0].photos.isEmpty {
+                    do {
+                        let catImages = try await NetworkManager.shared.fetchCatImages()
+                        addCatImagesToRecents(images: catImages)
+                    } catch {
+                        print(error)
+                    }
                 }
             }
             .alert(alertType?.title ?? "Alert", isPresented: $isShowingAlert, presenting: alertType) { alert in
@@ -56,6 +64,15 @@ struct AlbumListView: View {
             } message: { alert in Text(alert.message) }
         }
     }
+}
+
+extension AlbumListView {
+    private func addCatImagesToRecents(images: [CatResponse]) {
+        images.forEach {
+            let photo = Photo(url: $0.url, date: .now, album: albums[0])
+            albums[0].photos.append(photo)
+        }
+    }
     
     private func showAlert(alertType: AlertType) {
         self.alertType = alertType
@@ -70,7 +87,7 @@ struct AlbumListView: View {
 }
 
 #Preview {
-    var shouldCreateDefaults = true
+    var shouldCreateDefaults = false
     return AlbumListView()
         .modelContainer(AlbumContainer.create(shouldCreateDefaults: &shouldCreateDefaults))
 }
