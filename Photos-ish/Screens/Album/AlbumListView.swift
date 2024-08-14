@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct AlbumListView: View {
+    @AppStorage("isFirstTimeLaunch") private var isFirstTimeLaunch: Bool = true
     @Environment(\.modelContext) var context
     @Query(sort: [SortDescriptor<Album>(\.date, order: .forward)]) var albums: [Album]
     @State var isShowingAlert: Bool = false
@@ -41,10 +42,11 @@ struct AlbumListView: View {
                 }
             }
             .task {
-                if albums[0].photos.isEmpty {
+                if isFirstTimeLaunch {
                     do {
                         let catImages = try await NetworkManager.shared.fetchCatImages()
-                        addCatImagesToRecents(images: catImages)
+                        setDefaultAlbums(images: catImages)
+                        isFirstTimeLaunch = false
                     } catch {
                         print(error)
                     }
@@ -67,10 +69,16 @@ struct AlbumListView: View {
 }
 
 extension AlbumListView {
-    private func addCatImagesToRecents(images: [CatResponse]) {
+    private func setDefaultAlbums(images: [CatResponse]) {
+        let recents = Album(name: "Recents", date: Date(), isEditable: false)
+        let favorites = Album(name: "Favorites", date: Date(), isEditable: false)
+        context.insert(recents)
+        context.insert(favorites)
+        
         images.forEach {
-            let photo = Photo(url: $0.url, date: .now, album: albums[0])
-            albums[0].photos.append(photo)
+            let photo = Photo(url: $0.url, date: .now)
+            context.insert(photo)
+            recents.photos.append(photo)
         }
     }
     
@@ -89,5 +97,5 @@ extension AlbumListView {
 #Preview {
     var shouldCreateDefaults = false
     return AlbumListView()
-        .modelContainer(AlbumContainer.create(shouldCreateDefaults: &shouldCreateDefaults))
+        .modelContainer(for: Album.self)
 }

@@ -14,12 +14,12 @@ class Photo: Hashable {
     let url: String
     let date: Date
     var isFavorite: Bool
-    var album: Album?
+    var albums: [Album]
     
-    init(url: String, date: Date, isFavorite: Bool = false, album: Album? = nil) {
+    init(url: String, date: Date, isFavorite: Bool = false, albums: [Album] = []) {
         self.url = url
         self.date = date
         self.isFavorite = isFavorite
-        self.album = album
+        self.albums = albums
     }
 }

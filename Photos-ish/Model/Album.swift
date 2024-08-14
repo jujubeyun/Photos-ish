@@ -15,7 +15,8 @@ class Album {
     let date: Date
     let isEditable: Bool
     
-    @Relationship(deleteRule: .cascade, inverse: \Photo.album) var photos: [Photo]
+    @Relationship(deleteRule: .nullify, inverse: \Photo.albums)
+    var photos: [Photo]
     
     init(name: String, date: Date, isEditable: Bool = true, photos: [Photo] = []) {
         self.name = name
