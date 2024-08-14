@@ -14,6 +14,7 @@ struct FavoriteMark: View {
     var body: some View {
         Image(systemName: "heart.fill")
             .resizable()
+            .scaledToFit()
             .frame(width: size, height: size)
             .foregroundStyle(Color(.white))
             .padding(6)
