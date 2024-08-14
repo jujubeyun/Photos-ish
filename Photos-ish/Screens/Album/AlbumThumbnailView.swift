@@ -6,22 +6,24 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct AlbumThumbnailView: View {
-    
+    @Environment(\.modelContext) var context
+    @Query(sort: [SortDescriptor<Album>(\.date, order: .forward)]) var albums: [Album]
     @Binding var alertType: AlertType?
     @Binding var isShowingAlert: Bool
     let isEditing: Bool
     let album: Album
     
-    var lastPhotoURLString: String? {
-        album.sortedPhotos.last?.url
+    var lastPhoto: Photo? {
+        album.sortedPhotos.last
     }
     
     var body: some View {
         NavigationLink(value: album) {
             VStack(alignment: .leading, spacing: 0) {
-                AsyncImage(url: URL(string: lastPhotoURLString ?? "")) { phase in
+                AsyncImage(url: URL(string: lastPhoto?.url ?? "")) { phase in
                     switch phase {
                     case .success(let image):
                         image
@@ -30,6 +32,12 @@ struct AlbumThumbnailView: View {
                             .frame(width: UIScreen.main.bounds.width/2.3,
                                    height: UIScreen.main.bounds.width/2.3)
                             .clipShape(.rect(cornerRadius: 8))
+                            .overlay(alignment: .bottomLeading) {
+                                let favorites = albums[1]
+                                if lastPhoto?.isFavorite ?? false && album.id == favorites.id {
+                                    FavoriteMark(size: 15)
+                                }
+                            }
                     default:
                         placeholder
                     }

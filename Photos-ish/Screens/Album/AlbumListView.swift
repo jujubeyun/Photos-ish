@@ -95,7 +95,6 @@ extension AlbumListView {
 }
 
 #Preview {
-    var shouldCreateDefaults = false
-    return AlbumListView()
+    AlbumListView()
         .modelContainer(for: Album.self)
 }

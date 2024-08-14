@@ -33,10 +33,10 @@ struct RemoteImage: View {
 struct RemoteImageView: View {
     
     @StateObject var imageLoader = ImageLoader()
-    let urlString: String
+    let photo: Photo
     
     var body: some View {
         RemoteImage(image: imageLoader.image)
-            .onAppear { imageLoader.load(fromURLString: urlString) }
+            .onAppear { imageLoader.load(fromURLString: photo.url) }
     }
 }

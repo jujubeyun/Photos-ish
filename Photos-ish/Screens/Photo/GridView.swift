@@ -19,11 +19,14 @@ struct GridView: View {
             LazyVGrid(columns: .init(repeating: .init(.flexible()), count: columnCount), spacing: 2) {
                 ForEach(photos, id: \.self) { photo in
                     NavigationLink(value: photo) {
-                        RemoteImageView(urlString: photo.url)
+                        RemoteImageView(photo: photo)
                             .aspectRatio(contentMode: .fill)
                             .frame(width: UIScreen.main.bounds.width/3,
                                    height: UIScreen.main.bounds.width/3)
                             .clipped()
+                            .overlay(alignment: .bottomLeading) {
+                                if photo.isFavorite { FavoriteMark(size: 12) }
+                            }
                     }
                 }
             }
