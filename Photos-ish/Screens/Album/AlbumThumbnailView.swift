@@ -42,8 +42,7 @@ struct AlbumThumbnailView: View {
                         placeholder
                     }
                 }
-                
-                Spacer()
+                .padding(.bottom, 4)
                     
                 Text(album.name)
                     .font(.subheadline)

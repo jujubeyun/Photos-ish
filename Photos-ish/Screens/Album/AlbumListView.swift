@@ -32,7 +32,7 @@ struct AlbumListView: View {
             }
             .navigationTitle("Albums")
             .navigationDestination(for: Album.self) { album in
-                GridView(album: album, photos: album.sortedPhotos, isSelectingPhotos: false)
+                GridView(album: album, photos: album.sortedPhotos)
             }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {

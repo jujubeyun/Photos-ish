@@ -6,18 +6,14 @@
 //
 
 import SwiftUI
-import SwiftData
 
 struct GridView: View {
-    @Environment(\.modelContext) var context
-    @Query(sort: [SortDescriptor<Album>(\.date, order: .forward)]) var albums: [Album]
+    
     @State var scrolledID: Photo?
     @State var isShowingAlert = false
-    @State var selectedPhotos: [Photo] = []
     let album: Album
     let photos: [Photo]
     let columnCount = 3
-    let isSelectingPhotos: Bool
     
     var body: some View {
         ZStack {
@@ -40,22 +36,7 @@ struct GridView: View {
             }
         }
         .sheet(isPresented: $isShowingAlert) {
-            NavigationStack {
-                GridView(album: albums[0], photos: albums[0].sortedPhotos, isSelectingPhotos: true)
-                    .toolbar {
-                        ToolbarItem(placement: .topBarLeading) {
-                            Button("Cancel") {
-                                isShowingAlert = false
-                            }
-                        }
-                        
-                        ToolbarItem(placement: .topBarTrailing) {
-                            Button("Add") {
-                                
-                            }
-                        }
-                    }
-            }
+            SelectableGridView(isShowingAlert: $isShowingAlert, album: album)
         }
     }
     
@@ -75,38 +56,15 @@ struct GridView: View {
         ScrollView {
             LazyVGrid(columns: .init(repeating: .init(.flexible()), count: columnCount), spacing: 2) {
                 ForEach(photos, id: \.self) { photo in
-                    if isSelectingPhotos {
-                        let isSelected = selectedPhotos.contains(photo)
+                    NavigationLink(value: photo) {
                         RemoteImageView(photo: photo)
                             .aspectRatio(contentMode: .fill)
                             .frame(width: UIScreen.main.bounds.width/3,
                                    height: UIScreen.main.bounds.width/3)
                             .clipped()
-                            .contentShape(Rectangle())
-                            .opacity(isSelected ? 0.5 : 1.0)
-                            .onTapGesture {
-                                if isSelected {
-                                    selectedPhotos.removeAll { $0 == photo}
-                                } else {
-                                    selectedPhotos.append(photo)
-                                }
+                            .overlay(alignment: .bottomLeading) {
+                                if photo.isFavorite { FavoriteMark(size: 12) }
                             }
-                            .overlay(alignment: .bottomTrailing) {
-                                if isSelected {
-                                    SelectionMark()
-                                }
-                            }
-                    } else {
-                        NavigationLink(value: photo) {
-                            RemoteImageView(photo: photo)
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: UIScreen.main.bounds.width/3,
-                                       height: UIScreen.main.bounds.width/3)
-                                .clipped()
-                                .overlay(alignment: .bottomLeading) {
-                                    if photo.isFavorite { FavoriteMark(size: 12) }
-                                }
-                        }
                     }
                 }
             }
@@ -116,5 +74,5 @@ struct GridView: View {
 }
 
 #Preview {
-    GridView(album: .init(name: "test", date: Date()), photos: [], isSelectingPhotos: false)
+    GridView(album: .init(name: "test", date: Date()), photos: [])
 }
