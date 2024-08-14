@@ -10,12 +10,12 @@ import SwiftData
 
 struct AlbumListView: View {
     @AppStorage("isFirstTimeLaunch") private var isFirstTimeLaunch: Bool = true
-    @Environment(\.modelContext) var context
-    @Query(sort: [SortDescriptor<Album>(\.date, order: .forward)]) var albums: [Album]
-    @State var isShowingAlert: Bool = false
-    @State var alertType: AlertType?
-    @State var titleText = ""
-    @State var isEditing = false
+    @Environment(\.modelContext) private var context
+    @Query(sort: [SortDescriptor<Album>(\.date, order: .forward)]) private var albums: [Album]
+    @State private var isShowingAlert: Bool = false
+    @State private var alertType: AlertType?
+    @State private var titleText = ""
+    @State private var isEditing = false
     
     var body: some View {
         NavigationStack {
@@ -36,7 +36,7 @@ struct AlbumListView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button("", systemImage: "plus") { showAlert(alertType: .add) }
+                    Button("Add", systemImage: "plus") { showAlert(alertType: .add) }
                 }
                 
                 ToolbarItem(placement: .topBarTrailing) {
@@ -47,9 +47,10 @@ struct AlbumListView: View {
                 if isFirstTimeLaunch {
                     do {
                         let catImages = try await NetworkManager.shared.fetchCatImages()
-                        setDefaultAlbums(images: catImages)
+                        preload(images: catImages)
                         isFirstTimeLaunch = false
                     } catch {
+                        // TODO: - handle errors
                         print(error)
                     }
                 }
@@ -65,13 +66,15 @@ struct AlbumListView: View {
                     Button("Delete", role: .destructive) { context.delete(album) }
                     Button("Cancel", role: .cancel) {}
                 }
-            } message: { alert in Text(alert.message) }
+            } message: { alert in
+                Text(alert.message)
+            }
         }
     }
 }
 
 extension AlbumListView {
-    private func setDefaultAlbums(images: [CatResponse]) {
+    private func preload(images: [CatResponse]) {
         let recents = Album(name: "Recents", date: Date(), isEditable: false)
         let favorites = Album(name: "Favorites", date: Date(), isEditable: false)
         context.insert(recents)
@@ -90,6 +93,7 @@ extension AlbumListView {
     }
     
     private func saveAlbum() {
+        guard !titleText.isEmpty else { return }
         let newAlbum = Album(name: titleText, date: Date())
         context.insert(newAlbum)
         titleText = ""

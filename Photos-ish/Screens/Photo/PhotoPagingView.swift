@@ -9,10 +9,10 @@ import SwiftUI
 import SwiftData
 
 struct PhotoPagingView: View {
-    @Environment(\.modelContext) var context
-    @Query(sort: [SortDescriptor<Album>(\.date, order: .forward)]) var albums: [Album]
-    @State var scrolledID: Photo?
-    @State var isShowingAlert = false
+    @Environment(\.modelContext) private var context
+    @Query(sort: [SortDescriptor<Album>(\.date, order: .forward)]) private var albums: [Album]
+    @State private var scrolledID: Photo?
+    @State private var isShowingAlert = false
     let album: Album
     let selectedPhoto: Photo
     let photos: [Photo]
@@ -38,22 +38,16 @@ struct PhotoPagingView: View {
         .toolbar {
             ToolbarItemGroup(placement: .bottomBar) {
                 let imageName = scrolledID?.isFavorite ?? false ? "heart.fill" : "heart"
-                Button("favorite", systemImage: imageName) {
-                    setFavorite()
-                }
-                
+                Button("favorite", systemImage: imageName) { setFavorite() }
                 Spacer()
-                
-                Button("delete", systemImage: "trash") {
-                    isShowingAlert = true
-                }
+                Button("delete", systemImage: "trash") { isShowingAlert = true }
             }
         }
         .confirmationDialog("Delete Photo", isPresented: $isShowingAlert) {
             Button("Delete Photo", role: .destructive) {
                 guard let photo = scrolledID,
                       let photoIndex = album.photos.firstIndex(of: photo) else { return }
-                context.delete(album.photos[photoIndex])
+                context.delete(album.photos[photoIndex]) // this doesn't update ui
                 album.photos.remove(at: photoIndex) // to update ui
             }
         } message: {
@@ -64,24 +58,15 @@ struct PhotoPagingView: View {
     private func setFavorite() {
         guard let photo = scrolledID else { return }
         let favorites = albums[1]
+        
         if photo.isFavorite == true {
-            // delete the photo in favorites
             if let index = favorites.photos.firstIndex(of: photo) {
                 favorites.photos.remove(at: index)
             }
         } else {
-            // add photo in favorites
             favorites.photos.append(photo)
         }
+        
         photo.isFavorite.toggle()
-    }
-}
-
-#Preview {
-    NavigationStack {
-        PhotoPagingView(album: .init(name: "test", date: .now),
-                        selectedPhoto: .init(url: "", date: .now),
-                        photos: [])
-        .modelContainer(for: Album.self)
     }
 }

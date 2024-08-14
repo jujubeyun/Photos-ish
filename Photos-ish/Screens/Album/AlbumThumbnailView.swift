@@ -9,14 +9,14 @@ import SwiftUI
 import SwiftData
 
 struct AlbumThumbnailView: View {
-    @Environment(\.modelContext) var context
-    @Query(sort: [SortDescriptor<Album>(\.date, order: .forward)]) var albums: [Album]
+    @Environment(\.modelContext) private var context
+    @Query(sort: [SortDescriptor<Album>(\.date, order: .forward)]) private var albums: [Album]
     @Binding var alertType: AlertType?
     @Binding var isShowingAlert: Bool
     let isEditing: Bool
     let album: Album
     
-    var lastPhoto: Photo? {
+    private var lastPhoto: Photo? {
         album.sortedPhotos.last
     }
     
@@ -51,7 +51,7 @@ struct AlbumThumbnailView: View {
                     .foregroundStyle(.secondary)
             }
         }
-        .buttonStyle(PlainButtonStyle())
+        .buttonStyle(PlainButtonStyle()) // to prevent changing text color to blue
         .overlay(alignment: .topLeading) {
             if isEditing && album.isEditable { deleteButton }
         }
@@ -59,7 +59,7 @@ struct AlbumThumbnailView: View {
         .animation(.easeInOut, value: isEditing)
     }
     
-    var placeholder: some View {
+    private var placeholder: some View {
         ZStack {
             Color(.quaternarySystemFill)
                 .frame(width: UIScreen.main.bounds.width/2.3,
@@ -74,7 +74,7 @@ struct AlbumThumbnailView: View {
         }
     }
     
-    var deleteButton: some View {
+    private var deleteButton: some View {
         Button {
             alertType = .delete(album: album)
             isShowingAlert = true
@@ -91,11 +91,4 @@ struct AlbumThumbnailView: View {
             .offset(x: -10, y: -10)
         }
     }
-}
-
-#Preview {
-    AlbumThumbnailView(alertType: .constant(.add), 
-                       isShowingAlert: .constant(false),
-                       isEditing: true,
-                       album: Album(name: "Test", date: Date(),isEditable: true))
 }

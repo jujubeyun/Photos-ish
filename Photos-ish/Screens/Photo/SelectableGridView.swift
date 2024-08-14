@@ -9,17 +9,16 @@ import SwiftUI
 import SwiftData
 
 struct SelectableGridView: View {
-    @Environment(\.modelContext) var context
-    @Query(sort: [SortDescriptor<Photo>(\.date, order: .forward)]) var photos: [Photo]
-    @Binding var isShowingAlert: Bool
-    @State var selectedPhotos: [Photo] = []
+    @Environment(\.modelContext) private var context
+    @Query(sort: [SortDescriptor<Photo>(\.date, order: .forward)]) private var photos: [Photo]
+    @State private var selectedPhotos: [Photo] = []
+    @Binding var isAddingPhotos: Bool
     let album: Album
-    let columnCount = 3
     
     var body: some View {
         NavigationStack {
             ScrollView {
-                LazyVGrid(columns: .init(repeating: .init(.flexible()), count: columnCount), spacing: 2) {
+                LazyVGrid(columns: .init(repeating: .init(.flexible()), count: 3), spacing: 2) {
                     ForEach(photos, id: \.self) { photo in
                         selectableGrid(selectedPhotos: $selectedPhotos,
                                        photo: photo, 
@@ -30,7 +29,7 @@ struct SelectableGridView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("Cancel") {
-                        isShowingAlert = false
+                        isAddingPhotos = false
                     }
                 }
                 
@@ -40,17 +39,12 @@ struct SelectableGridView: View {
                             album.photos.append(photo)
                         }
                         
-                        isShowingAlert = false
+                        isAddingPhotos = false
                     }
                 }
             }
         }
     }
-}
-
-#Preview {
-    SelectableGridView(isShowingAlert: .constant(true),
-                      album: .init(name: "test", date: .now))
 }
 
 struct selectableGrid: View {

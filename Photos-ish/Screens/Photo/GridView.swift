@@ -9,11 +9,10 @@ import SwiftUI
 
 struct GridView: View {
     
-    @State var scrolledID: Photo?
-    @State var isShowingAlert = false
+    @State private var scrolledID: Photo?
+    @State private var isAddingPhotos = false
     let album: Album
     let photos: [Photo]
-    let columnCount = 3
     
     var body: some View {
         ZStack {
@@ -31,12 +30,12 @@ struct GridView: View {
         .toolbar {
             if album.isEditable {
                 Button("add Photos", systemImage: "plus") {
-                    isShowingAlert = true
+                    isAddingPhotos = true
                 }
             }
         }
-        .sheet(isPresented: $isShowingAlert) {
-            SelectableGridView(isShowingAlert: $isShowingAlert, album: album)
+        .sheet(isPresented: $isAddingPhotos) {
+            SelectableGridView(isAddingPhotos: $isAddingPhotos, album: album)
         }
     }
     
@@ -54,7 +53,7 @@ struct GridView: View {
     
     private var GridViewSection: some View {
         ScrollView {
-            LazyVGrid(columns: .init(repeating: .init(.flexible()), count: columnCount), spacing: 2) {
+            LazyVGrid(columns: .init(repeating: .init(.flexible()), count: 3), spacing: 2) {
                 ForEach(photos, id: \.self) { photo in
                     NavigationLink(value: photo) {
                         RemoteImageView(photo: photo)
@@ -71,8 +70,4 @@ struct GridView: View {
             .scrollTargetLayout()
         }
     }
-}
-
-#Preview {
-    GridView(album: .init(name: "test", date: Date()), photos: [])
 }
