@@ -15,7 +15,7 @@ struct AlbumThumbnailView: View {
     let album: Album
     
     var lastPhotoURLString: String? {
-        album.photos.last?.url
+        album.sortedPhotos.last?.url
     }
     
     var body: some View {

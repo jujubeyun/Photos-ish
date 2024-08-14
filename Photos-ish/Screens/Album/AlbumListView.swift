@@ -30,7 +30,7 @@ struct AlbumListView: View {
                 .padding()
             }
             .navigationTitle("Albums")
-            .navigationDestination(for: Album.self) { album in GridView(album: album) }
+            .navigationDestination(for: Album.self) { album in GridView(album: album, photos: album.sortedPhotos) }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("", systemImage: "plus") { showAlert(alertType: .add) }

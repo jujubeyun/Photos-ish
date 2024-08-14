@@ -23,4 +23,8 @@ class Album {
         self.isEditable = isEditable
         self.photos = photos
     }
+    
+    var sortedPhotos: [Photo] {
+        self.photos.sorted { $0.date < $1.date }
+    }
 }

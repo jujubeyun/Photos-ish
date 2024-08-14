@@ -9,33 +9,35 @@ import SwiftUI
 
 struct PhotoPagingView: View {
     @Environment(\.modelContext) var context
-    @State var index: Int?
+    @State var scrolledID: Photo?
     @State var isShowingAlert = false
     let album: Album
-    let selectedIndex: Int
+    let selectedPhoto: Photo
+    let photos: [Photo]
     
     var body: some View {
         ScrollView(.horizontal) {
             LazyHGrid(rows: .init(repeating: .init(.flexible()), count: 1), spacing: 0) {
-                ForEach(0..<album.photos.count, id: \.self) { i in
-                    RemoteImageView(urlString: album.photos[i].url)
-                        .scaledToFit()
-                        .containerRelativeFrame(.horizontal)
+                ForEach(photos, id: \.self) { photo in
+                    VStack {
+                        RemoteImageView(urlString: photo.url)
+                            .scaledToFit()
+                            .containerRelativeFrame(.horizontal)
+                    }
                 }
             }
             .scrollTargetLayout()
         }
-        .onAppear { index = selectedIndex }
+        .onAppear { scrolledID = selectedPhoto }
         .scrollTargetBehavior(.paging)
         .scrollIndicators(.hidden)
-        .scrollPosition(id: $index)
+        .scrollPosition(id: $scrolledID)
         .ignoresSafeArea()
         .toolbar {
             ToolbarItemGroup(placement: .bottomBar) {
-                let photo = album.photos[safe: index]
-                let imageName = photo?.isFavorite ?? false ? "heart.fill" : "heart"
+                let imageName = scrolledID?.isFavorite ?? false ? "heart.fill" : "heart"
                 Button("favorite", systemImage: imageName) {
-                    photo?.isFavorite.toggle()
+                    scrolledID?.isFavorite.toggle()
                 }
                 
                 Spacer()
@@ -47,9 +49,10 @@ struct PhotoPagingView: View {
         }
         .confirmationDialog("Delete Photo", isPresented: $isShowingAlert) {
             Button("Delete Photo", role: .destructive) {
-                guard let index else { return }
-                context.delete(album.photos[index])
-                album.photos.remove(at: index) // to update ui
+                guard let photo = scrolledID,
+                      let photoIndex = album.photos.firstIndex(of: photo) else { return }
+                context.delete(album.photos[photoIndex])
+                album.photos.remove(at: photoIndex) // to update ui
             }
         } message: {
             Text("This Photo will be deleted from the library.")
@@ -59,6 +62,8 @@ struct PhotoPagingView: View {
 
 #Preview {
     NavigationStack {
-        PhotoPagingView(album: Album(name: "test", date: Date()), selectedIndex: 0)
+        PhotoPagingView(album: .init(name: "test", date: .now),
+                        selectedPhoto: .init(url: "", date: .now),
+                        photos: [])
     }
 }

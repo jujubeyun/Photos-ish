@@ -9,16 +9,17 @@ import SwiftUI
 
 struct GridView: View {
     
-    @State var scrolledID: Int?
+    @State var scrolledID: Photo?
     let album: Album
+    let photos: [Photo]
     let columnCount = 3
     
     var body: some View {
         ScrollView {
             LazyVGrid(columns: .init(repeating: .init(.flexible()), count: columnCount), spacing: 2) {
-                ForEach(0..<album.photos.count, id: \.self) { i in
-                    NavigationLink(value: i) {
-                        RemoteImageView(urlString: album.photos[i].url)
+                ForEach(photos, id: \.self) { photo in
+                    NavigationLink(value: photo) {
+                        RemoteImageView(urlString: photo.url)
                             .aspectRatio(contentMode: .fill)
                             .frame(width: UIScreen.main.bounds.width/3,
                                    height: UIScreen.main.bounds.width/3)
@@ -26,17 +27,18 @@ struct GridView: View {
                     }
                 }
             }
+            .scrollTargetLayout()
         }
-        .scrollPosition(id: $scrolledID, anchor: .bottom)
-        .navigationDestination(for: Int.self) { i in
-            PhotoPagingView(album: album, selectedIndex: i)
+        .scrollPosition(id: $scrolledID)
+        .navigationDestination(for: Photo.self) { photo in
+            PhotoPagingView(album: album, selectedPhoto: photo, photos: photos)
         }
         .onAppear {
-            scrolledID = album.photos.count-1
+            scrolledID = photos.last
         }
     }
 }
 
 #Preview {
-    GridView(album: .init(name: "test", date: Date()))
+    GridView(album: .init(name: "test", date: Date()), photos: [])
 }
