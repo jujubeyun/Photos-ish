@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct PhotoPagingView: View {
     @Environment(\.modelContext) var context
+    @Query(sort: [SortDescriptor<Album>(\.date, order: .forward)]) var albums: [Album]
     @State var scrolledID: Photo?
     @State var isShowingAlert = false
     let album: Album
@@ -37,7 +39,7 @@ struct PhotoPagingView: View {
             ToolbarItemGroup(placement: .bottomBar) {
                 let imageName = scrolledID?.isFavorite ?? false ? "heart.fill" : "heart"
                 Button("favorite", systemImage: imageName) {
-                    scrolledID?.isFavorite.toggle()
+                    setFavorite()
                 }
                 
                 Spacer()
@@ -58,6 +60,21 @@ struct PhotoPagingView: View {
             Text("This Photo will be deleted from the library.")
         }
     }
+    
+    private func setFavorite() {
+        guard let photo = scrolledID else { return }
+        let favorites = albums[1]
+        if photo.isFavorite == true {
+            // delete the photo in favorites
+            if let index = favorites.photos.firstIndex(of: photo) {
+                favorites.photos.remove(at: index)
+            }
+        } else {
+            // add photo in favorites
+            favorites.photos.append(photo)
+        }
+        photo.isFavorite.toggle()
+    }
 }
 
 #Preview {
@@ -65,5 +82,6 @@ struct PhotoPagingView: View {
         PhotoPagingView(album: .init(name: "test", date: .now),
                         selectedPhoto: .init(url: "", date: .now),
                         photos: [])
+        .modelContainer(for: Album.self)
     }
 }
