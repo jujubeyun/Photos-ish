@@ -16,7 +16,6 @@ enum NetworkError: Error {
 final class NetworkManager {
     
     static let shared = NetworkManager()
-    private let cache = NSCache<NSString, UIImage>()
     
     private init() {}
     
@@ -45,28 +44,35 @@ final class NetworkManager {
         }
     }
     
-    func downloadImage(fromURLString urlString: String, completed: @escaping (UIImage?) -> Void) {
-        
-        let cacheKey = NSString(string: urlString)
-        
-        if let image = cache.object(forKey: cacheKey) {
-            completed(image)
-            return
-        }
-        
-        guard let url = URL(string: urlString) else {
-            completed(nil)
-            return
-        }
-        
-        URLSession.shared.dataTask(with: URLRequest(url: url)) { data, response, error in
-            guard let data = data, let image = UIImage(data: data) else {
+    func downsample(from urlString: String, to pointSize: CGSize, scale: CGFloat, completed: @escaping (UIImage?) -> Void) {
+        DispatchQueue.global(qos: .userInteractive).async {
+            guard let url = URL(string: urlString) else {
+                print("Invalid URL")
                 completed(nil)
                 return
             }
             
-            self.cache.setObject(image, forKey: cacheKey)
+            let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
+            guard let imageSource = CGImageSourceCreateWithURL(url as CFURL, imageSourceOptions) else {
+                print("Failed to create image source")
+                completed(nil)
+                return
+            }
+            
+            let maxDimensionInPixels = max(pointSize.width, pointSize.height) * scale
+            let downsampleOptions = [kCGImageSourceCreateThumbnailFromImageAlways: true,
+                                             kCGImageSourceShouldCacheImmediately: true,
+                                       kCGImageSourceCreateThumbnailWithTransform: true,
+                                              kCGImageSourceThumbnailMaxPixelSize: maxDimensionInPixels] as CFDictionary
+            
+            guard let downsampledImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, downsampleOptions) else {
+                print("Failed to downsample")
+                completed(nil)
+                return
+            }
+            
+            let image = UIImage(cgImage: downsampledImage)
             completed(image)
-        }.resume()
+        }
     }
 }

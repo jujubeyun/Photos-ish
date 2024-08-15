@@ -11,8 +11,9 @@ final class ImageLoader: ObservableObject {
     
     @Published var image: Image? = nil
     
-    func load(fromURLString urlString: String) {
-        NetworkManager.shared.downloadImage(fromURLString: urlString) { uiImage in
+    func load(fromURLString urlString: String, size: Int) {        
+        let size = CGSize(width: size, height: size)
+        NetworkManager.shared.downsample(from: urlString, to: size, scale: 1.0) { uiImage in
             guard let uiImage = uiImage else { return }
             DispatchQueue.main.async {
                 self.image = Image(uiImage: uiImage)
@@ -36,10 +37,11 @@ struct RemoteImageView: View {
     let photo: Photo
     let imageContentMode: ContentMode
     let shouldShowFavoriteMark: Bool
+    let isGrid: Bool
     
     var body: some View {
         Rectangle()
-            .onAppear { imageLoader.load(fromURLString: photo.url) }
+            .onAppear { imageLoader.load(fromURLString: photo.url, size: isGrid ? 150 : 300) }
             .foregroundColor(.clear)
             .overlay {
                 GeometryReader { geometry in

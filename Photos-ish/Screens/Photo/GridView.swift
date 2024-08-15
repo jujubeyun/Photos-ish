@@ -66,7 +66,7 @@ struct GridView: View {
             LazyVGrid(columns: .init(repeating: .init(.flexible(), spacing: 2), count: columnCount), spacing: 2) {
                 ForEach(photos, id: \.self) { photo in
                     NavigationLink(value: photo) {
-                        RemoteImageView(photo: photo, imageContentMode: .fill, shouldShowFavoriteMark: true)
+                        RemoteImageView(photo: photo, imageContentMode: .fill, shouldShowFavoriteMark: true, isGrid: true)
                             .aspectRatio(1, contentMode: .fit)
                     }
                 }

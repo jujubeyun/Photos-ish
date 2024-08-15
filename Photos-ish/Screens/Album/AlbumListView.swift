@@ -26,7 +26,7 @@ struct AlbumListView: View {
             ZStack {
                 ScrollView {
                     LazyVGrid(columns: .init(repeating: .init(.flexible(), spacing: 16), count: columnCount), spacing: 16) {
-                        ForEach(albums) { album in
+                        ForEach(albums, id: \.self) { album in
                             AlbumThumbnailView(alertType: $alertType,
                                                isShowingAlert: $isShowingAlert,
                                                isEditing: isEditing,

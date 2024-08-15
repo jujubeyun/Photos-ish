@@ -26,7 +26,7 @@ struct SelectableGridView: View {
                 LazyVGrid(columns: .init(repeating: .init(.flexible(), spacing: 2), count: columnCount), spacing: 2) {
                     ForEach(photos, id: \.self) { photo in
                         let isSelected = selectedPhotos.contains(photo)
-                        RemoteImageView(photo: photo, imageContentMode: .fill, shouldShowFavoriteMark: true)
+                        RemoteImageView(photo: photo, imageContentMode: .fill, shouldShowFavoriteMark: true, isGrid: true)
                             .aspectRatio(1, contentMode: .fit)
                             .opacity(isSelected ? 0.5 : 1.0)
                             .onTapGesture {

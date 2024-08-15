@@ -23,7 +23,7 @@ struct PhotoPagingView: View {
             LazyHGrid(rows: .init(repeating: .init(.flexible()), count: 1), spacing: 0) {
                 ForEach(photos, id: \.self) { photo in
                     VStack {
-                        RemoteImageView(photo: photo, imageContentMode: .fit, shouldShowFavoriteMark: false)
+                        RemoteImageView(photo: photo, imageContentMode: .fit, shouldShowFavoriteMark: false, isGrid: false)
                             .containerRelativeFrame(.horizontal)
                     }
                 }

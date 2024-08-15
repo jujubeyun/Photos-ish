@@ -26,7 +26,7 @@ struct AlbumThumbnailView: View {
                 ZStack {
                     if let photo = lastPhoto {
                         let isFavorites = albums[1].id == album.id
-                        RemoteImageView(photo: photo, imageContentMode: .fill, shouldShowFavoriteMark: isFavorites)
+                        RemoteImageView(photo: photo, imageContentMode: .fill, shouldShowFavoriteMark: isFavorites, isGrid: false)
                             .clipShape(.rect(cornerRadius: 8))
                     } else {
                         placeholder
