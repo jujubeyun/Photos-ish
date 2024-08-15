@@ -15,6 +15,7 @@
 		6B6BE1082C6CBC7500299624 /* FavoriteMark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6BE1072C6CBC7400299624 /* FavoriteMark.swift */; };
 		6B6BE10C2C6CF0F700299624 /* SelectionMark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6BE10B2C6CF0F700299624 /* SelectionMark.swift */; };
 		6B6BE10E2C6CFB7800299624 /* SelectableGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6BE10D2C6CFB7800299624 /* SelectableGridView.swift */; };
+		6B7AA8F92C6DA826008191A5 /* View+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B7AA8F82C6DA826008191A5 /* View+Ext.swift */; };
 		6B8380822C689197001E8EBA /* AlbumThumbnailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B8380812C689197001E8EBA /* AlbumThumbnailView.swift */; };
 		6BBC84C12C691080002295E8 /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BBC84C02C691080002295E8 /* Alert.swift */; };
 		6BD10FD12C65A114003C6BA4 /* Photos_ishApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BD10FD02C65A114003C6BA4 /* Photos_ishApp.swift */; };
@@ -35,6 +36,7 @@
 		6B6BE1072C6CBC7400299624 /* FavoriteMark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteMark.swift; sourceTree = "<group>"; };
 		6B6BE10B2C6CF0F700299624 /* SelectionMark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionMark.swift; sourceTree = "<group>"; };
 		6B6BE10D2C6CFB7800299624 /* SelectableGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectableGridView.swift; sourceTree = "<group>"; };
+		6B7AA8F82C6DA826008191A5 /* View+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Ext.swift"; sourceTree = "<group>"; };
 		6B8380812C689197001E8EBA /* AlbumThumbnailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumThumbnailView.swift; sourceTree = "<group>"; };
 		6BBC84C02C691080002295E8 /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
 		6BD10FCD2C65A114003C6BA4 /* Photos-ish.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Photos-ish.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -96,6 +98,14 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		6B7AA8F72C6DA81F008191A5 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				6B7AA8F82C6DA826008191A5 /* View+Ext.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		6BD10FC42C65A114003C6BA4 = {
 			isa = PBXGroup;
 			children = (
@@ -137,6 +147,7 @@
 		6BFD55B12C65FF4100924393 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				6B7AA8F72C6DA81F008191A5 /* Extensions */,
 				6BFD55B22C65FF4800924393 /* Managers */,
 				6B6BE1012C6BA68E00299624 /* Alerts */,
 			);
@@ -240,6 +251,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6B7AA8F92C6DA826008191A5 /* View+Ext.swift in Sources */,
 				6BFD55B52C65FF6700924393 /* CatResponse.swift in Sources */,
 				6BFD55B02C65A37F00924393 /* NetworkManager.swift in Sources */,
 				6BD10FD32C65A114003C6BA4 /* GridView.swift in Sources */,

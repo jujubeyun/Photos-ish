@@ -15,17 +15,23 @@ struct AlbumListView: View {
     @State private var alertType: AlertType?
     @State private var titleText = ""
     @State private var isEditing = false
+    @State private var isLandscape: Bool = false
+    
+    var columnCount: Int {
+        isLandscape ? 4 : 2
+    }
     
     var body: some View {
         NavigationStack {
             ZStack {
                 ScrollView {
-                    LazyVGrid(columns: .init(repeating: .init(.flexible()), count: 2), spacing: 16) {
+                    LazyVGrid(columns: .init(repeating: .init(.flexible(), spacing: 16), count: columnCount), spacing: 16) {
                         ForEach(albums) { album in
                             AlbumThumbnailView(alertType: $alertType,
                                                isShowingAlert: $isShowingAlert,
                                                isEditing: isEditing,
                                                album: album)
+                            .aspectRatio(0.8, contentMode: .fill)
                         }
                     }
                     .padding()
@@ -73,6 +79,9 @@ struct AlbumListView: View {
                 }
             } message: { alert in
                 Text(alert.message)
+            }
+            .onRotate { orientation in
+                isLandscape = orientation.isLandscape
             }
         }
     }

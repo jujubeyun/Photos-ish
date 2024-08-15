@@ -23,22 +23,12 @@ struct AlbumThumbnailView: View {
     var body: some View {
         NavigationLink(value: album) {
             VStack(alignment: .leading, spacing: 0) {
-                AsyncImage(url: URL(string: lastPhoto?.url ?? "")) { phase in
-                    switch phase {
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: UIScreen.main.bounds.width/2.3,
-                                   height: UIScreen.main.bounds.width/2.3)
+                ZStack {
+                    if let photo = lastPhoto {
+                        let isFavorites = albums[1].id == album.id
+                        RemoteImageView(photo: photo, imageContentMode: .fill, shouldShowFavoriteMark: isFavorites)
                             .clipShape(.rect(cornerRadius: 8))
-                            .overlay(alignment: .bottomLeading) {
-                                let favorites = albums[1]
-                                if lastPhoto?.isFavorite ?? false && album.id == favorites.id {
-                                    FavoriteMark(size: 15)
-                                }
-                            }
-                    default:
+                    } else {
                         placeholder
                     }
                 }
@@ -53,7 +43,7 @@ struct AlbumThumbnailView: View {
                     .foregroundStyle(.secondary)
             }
         }
-        .buttonStyle(PlainButtonStyle()) // to prevent changing text color to blue
+        .buttonStyle(PlainButtonStyle())
         .overlay(alignment: .topLeading) {
             if isEditing && album.isEditable { deleteButton }
         }
@@ -62,17 +52,19 @@ struct AlbumThumbnailView: View {
     }
     
     private var placeholder: some View {
-        ZStack {
-            Color(.quaternarySystemFill)
-                .frame(width: UIScreen.main.bounds.width/2.3,
-                       height: UIScreen.main.bounds.width/2.3)
-                .clipShape(.rect(cornerRadius: 8))
-            
-            Image(systemName: "photo.on.rectangle")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 50)
-                .foregroundStyle(Color(.quaternaryLabel))
+        GeometryReader { geometry in
+            ZStack {
+                Color(.quaternarySystemFill)
+                    .frame(width: geometry.size.width,
+                           height: geometry.size.height)
+                
+                Image(systemName: "photo.on.rectangle")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 50)
+                    .foregroundStyle(Color(.quaternaryLabel))
+            }
+            .clipShape(.rect(cornerRadius: 8))
         }
     }
     

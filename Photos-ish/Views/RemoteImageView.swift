@@ -34,9 +34,25 @@ struct RemoteImageView: View {
     
     @StateObject var imageLoader = ImageLoader()
     let photo: Photo
+    let imageContentMode: ContentMode
+    let shouldShowFavoriteMark: Bool
     
     var body: some View {
-        RemoteImage(image: imageLoader.image)
+        Rectangle()
             .onAppear { imageLoader.load(fromURLString: photo.url) }
+            .foregroundColor(.clear)
+            .overlay {
+                GeometryReader { geometry in
+                    RemoteImage(image: imageLoader.image)
+                        .aspectRatio(contentMode: imageContentMode)
+                        .frame(width: geometry.size.width,
+                               height: geometry.size.height,
+                               alignment: .center)
+                        .clipped()
+                        .overlay(alignment: .bottomLeading) {
+                            if photo.isFavorite && shouldShowFavoriteMark { FavoriteMark(size: 12) }
+                        }
+                }
+            }
     }
 }

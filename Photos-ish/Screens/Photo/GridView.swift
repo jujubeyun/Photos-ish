@@ -11,8 +11,13 @@ struct GridView: View {
     
     @State private var scrolledID: Photo?
     @State private var isAddingPhotos = false
+    @State private var isLandscape: Bool = false
     let album: Album
     let photos: [Photo]
+    
+    var columnCount: Int {
+        isLandscape ? 5 : 3
+    }
     
     var body: some View {
         ZStack {
@@ -37,6 +42,9 @@ struct GridView: View {
         .sheet(isPresented: $isAddingPhotos) {
             SelectableGridView(isAddingPhotos: $isAddingPhotos, album: album)
         }
+        .onRotate { orientation in
+            isLandscape = orientation.isLandscape
+        }
     }
     
     private var emptyView: some View {
@@ -53,17 +61,11 @@ struct GridView: View {
     
     private var GridViewSection: some View {
         ScrollView {
-            LazyVGrid(columns: .init(repeating: .init(.flexible()), count: 3), spacing: 2) {
+            LazyVGrid(columns: .init(repeating: .init(.flexible(), spacing: 2), count: columnCount), spacing: 2) {
                 ForEach(photos, id: \.self) { photo in
                     NavigationLink(value: photo) {
-                        RemoteImageView(photo: photo)
-                            .aspectRatio(contentMode: .fill)
-                            .frame(width: UIScreen.main.bounds.width/3,
-                                   height: UIScreen.main.bounds.width/3)
-                            .clipped()
-                            .overlay(alignment: .bottomLeading) {
-                                if photo.isFavorite { FavoriteMark(size: 12) }
-                            }
+                        RemoteImageView(photo: photo, imageContentMode: .fill, shouldShowFavoriteMark: true)
+                            .aspectRatio(1, contentMode: .fit)
                     }
                 }
             }
