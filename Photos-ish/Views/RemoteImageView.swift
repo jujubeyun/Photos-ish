@@ -13,10 +13,10 @@ final class ImageLoader: ObservableObject {
     
     func load(fromURLString urlString: String, size: Int) {        
         let size = CGSize(width: size, height: size)
-        NetworkManager.shared.downsample(from: urlString, to: size, scale: 1.0) { uiImage in
+        NetworkManager.shared.downsample(from: urlString, to: size, scale: 1.0) { [weak self] uiImage in
             guard let uiImage = uiImage else { return }
             DispatchQueue.main.async {
-                self.image = Image(uiImage: uiImage)
+                self?.image = Image(uiImage: uiImage)
             }
         }
     }

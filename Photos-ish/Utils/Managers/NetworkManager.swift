@@ -46,10 +46,10 @@ final class NetworkManager {
     }
     
     func downsample(from urlString: String, to pointSize: CGSize, scale: CGFloat, completed: @escaping (UIImage?) -> Void) {
-        DispatchQueue.global(qos: .userInteractive).async {
+        DispatchQueue.global(qos: .userInteractive).async { [weak self] in
             let cacheKey = NSString(string: urlString + "\(pointSize)")
             
-            if let image = self.cache.object(forKey: cacheKey) {
+            if let image = self?.cache.object(forKey: cacheKey) {
                 completed(image)
                 return
             }
@@ -80,7 +80,7 @@ final class NetworkManager {
             }
             
             let image = UIImage(cgImage: downsampledImage)
-            self.cache.setObject(image, forKey: cacheKey)
+            self?.cache.setObject(image, forKey: cacheKey)
             completed(image)
         }
     }
