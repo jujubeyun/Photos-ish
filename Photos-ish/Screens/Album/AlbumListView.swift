@@ -9,7 +9,6 @@ import SwiftUI
 import SwiftData
 
 struct AlbumListView: View {
-    @AppStorage("isFirstTimeLaunch") private var isFirstTimeLaunch: Bool = true
     @Environment(\.modelContext) private var context
     @Query(sort: [SortDescriptor<Album>(\.date, order: .forward)]) private var albums: [Album]
     @State private var isShowingAlert: Bool = false
@@ -44,14 +43,12 @@ struct AlbumListView: View {
                 }
             }
             .task {
-                if isFirstTimeLaunch {
+                if albums.isEmpty {
                     do {
                         let catImages = try await NetworkManager.shared.fetchCatImages()
                         preload(images: catImages)
-                        isFirstTimeLaunch = false
                     } catch {
-                        // TODO: - handle errors
-                        print(error)
+                        handle(error: error)
                     }
                 }
             }
@@ -65,6 +62,8 @@ struct AlbumListView: View {
                 case .delete(let album):
                     Button("Delete", role: .destructive) { context.delete(album) }
                     Button("Cancel", role: .cancel) {}
+                case .invalidURL, .invalidResponse, .invalidData, .unknown:
+                    Button("OK") {}
                 }
             } message: { alert in
                 Text(alert.message)
@@ -97,6 +96,21 @@ extension AlbumListView {
         let newAlbum = Album(name: titleText, date: Date())
         context.insert(newAlbum)
         titleText = ""
+    }
+    
+    private func handle(error: Error) {
+        if let error = error as? NetworkError {
+            switch error {
+            case .invalidURL:
+                showAlert(alertType: .invalidURL)
+            case .invalidResponse:
+                showAlert(alertType: .invalidResponse)
+            case .invalidData:
+                showAlert(alertType: .invalidData)
+            }
+        } else {
+            showAlert(alertType: .unknown)
+        }
     }
 }
 
