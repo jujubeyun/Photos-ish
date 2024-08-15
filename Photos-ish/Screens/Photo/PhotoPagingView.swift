@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct PhotoPagingView: View {
+    @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
     @Query(sort: [SortDescriptor<Album>(\.date, order: .forward)]) private var albums: [Album]
     @State private var scrolledID: Photo?
@@ -44,14 +45,12 @@ struct PhotoPagingView: View {
             }
         }
         .confirmationDialog("Delete Photo", isPresented: $isShowingAlert) {
-            Button("Delete Photo", role: .destructive) {
-                guard let photo = scrolledID,
-                      let photoIndex = album.photos.firstIndex(of: photo) else { return }
-                context.delete(album.photos[photoIndex]) // this doesn't update ui
-                album.photos.remove(at: photoIndex) // to update ui
+            Button("Delete", role: .destructive) {
+                deletePhoto()
             }
         } message: {
-            Text("This Photo will be deleted from the library.")
+            let message = album.isEditable ? "This photo will be removed from the album \"\(album.name)\"" : "This photo will be deleted permanantly."
+            Text(message)
         }
     }
     
@@ -68,5 +67,19 @@ struct PhotoPagingView: View {
         }
         
         photo.isFavorite.toggle()
+    }
+    
+    private func deletePhoto() {
+        guard let photo = scrolledID,
+              let photoIndex = album.photos.firstIndex(of: photo) else { return }
+        if !album.isEditable {
+            context.delete(album.photos[photoIndex])
+        }
+            
+        album.photos.remove(at: photoIndex)
+        
+        if album.photos.isEmpty {
+            dismiss()
+        }
     }
 }
