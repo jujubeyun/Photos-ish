@@ -16,6 +16,7 @@ enum NetworkError: Error {
 final class NetworkManager {
     
     static let shared = NetworkManager()
+    private let cache = NSCache<NSString, UIImage>()
     
     private init() {}
     
@@ -46,6 +47,13 @@ final class NetworkManager {
     
     func downsample(from urlString: String, to pointSize: CGSize, scale: CGFloat, completed: @escaping (UIImage?) -> Void) {
         DispatchQueue.global(qos: .userInteractive).async {
+            let cacheKey = NSString(string: urlString + "\(pointSize)")
+            
+            if let image = self.cache.object(forKey: cacheKey) {
+                completed(image)
+                return
+            }
+            
             guard let url = URL(string: urlString) else {
                 print("Invalid URL")
                 completed(nil)
@@ -72,6 +80,7 @@ final class NetworkManager {
             }
             
             let image = UIImage(cgImage: downsampledImage)
+            self.cache.setObject(image, forKey: cacheKey)
             completed(image)
         }
     }
