@@ -66,6 +66,7 @@ struct PhotoPagingView: View {
         }
         
         photo.isFavorite.toggle()
+        dismissIfAlbumIsEmpty()
     }
     
     private func deletePhoto() {
@@ -76,7 +77,10 @@ struct PhotoPagingView: View {
         }
             
         album.photos.remove(at: photoIndex)
-        
+        dismissIfAlbumIsEmpty()
+    }
+    
+    private func dismissIfAlbumIsEmpty() {
         if album.photos.isEmpty {
             dismiss()
         }

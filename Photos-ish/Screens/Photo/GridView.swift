@@ -6,9 +6,10 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct GridView: View {
-    
+    @Query(sort: [SortDescriptor<Album>(\.date, order: .forward)]) private var albums: [Album]
     @State private var scrolledID: Photo?
     @State private var isAddingPhotos = false
     @State private var isLandscape: Bool = false
@@ -48,11 +49,12 @@ struct GridView: View {
     }
     
     private var emptyView: some View {
-        VStack {
+        let isFavorites = album.id == albums[1].id
+        return VStack {
             Text("No Photos")
                 .font(.title).bold()
             
-            Text("Ciick plus sign at the top right to add cat photos.")
+            Text(isFavorites ? "You can add photos here by clicking heart button on photos." : "Ciick plus button at the top right to add cat photos.")
                 .foregroundStyle(.gray)
         }
         .padding()
