@@ -18,16 +18,22 @@ struct AlbumListView: View {
     
     var body: some View {
         NavigationStack {
-            ScrollView {
-                LazyVGrid(columns: .init(repeating: .init(.flexible()), count: 2), spacing: 16) {
-                    ForEach(albums) { album in
-                        AlbumThumbnailView(alertType: $alertType, 
-                                           isShowingAlert: $isShowingAlert,
-                                           isEditing: isEditing,
-                                           album: album)
+            ZStack {
+                ScrollView {
+                    LazyVGrid(columns: .init(repeating: .init(.flexible()), count: 2), spacing: 16) {
+                        ForEach(albums) { album in
+                            AlbumThumbnailView(alertType: $alertType,
+                                               isShowingAlert: $isShowingAlert,
+                                               isEditing: isEditing,
+                                               album: album)
+                        }
                     }
+                    .padding()
                 }
-                .padding()
+                
+                if albums.isEmpty {
+                    LoadingView()
+                }
             }
             .navigationTitle("Albums")
             .navigationDestination(for: Album.self) { album in

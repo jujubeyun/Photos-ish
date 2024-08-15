@@ -14,8 +14,9 @@ struct LoadingView: View {
                 .padding(.bottom, 30)
                 .controlSize(.extraLarge)
             
-            Text("Fetching cat images from server..")
+            Text("Preloading data from server..")
         }
+        .offset(y: -50)
     }
 }
 
