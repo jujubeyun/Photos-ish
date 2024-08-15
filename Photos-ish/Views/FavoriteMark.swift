@@ -8,14 +8,11 @@
 import SwiftUI
 
 struct FavoriteMark: View {
-    
-    let size: CGFloat
-    
     var body: some View {
         Image(systemName: "heart.fill")
             .resizable()
             .scaledToFit()
-            .frame(width: size, height: size)
+            .frame(width: 15, height: 15)
             .foregroundStyle(Color(.white))
             .padding(6)
             .shadow(color: .black, radius: 8)
@@ -23,5 +20,5 @@ struct FavoriteMark: View {
 }
 
 #Preview {
-    FavoriteMark(size: 12)
+    FavoriteMark()
 }

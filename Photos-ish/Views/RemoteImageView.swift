@@ -50,7 +50,7 @@ struct RemoteImageView: View {
                                alignment: .center)
                         .clipped()
                         .overlay(alignment: .bottomLeading) {
-                            if photo.isFavorite && shouldShowFavoriteMark { FavoriteMark(size: 12) }
+                            if photo.isFavorite && shouldShowFavoriteMark { FavoriteMark() }
                         }
                 }
             }
