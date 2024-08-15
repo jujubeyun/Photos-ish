@@ -46,6 +46,8 @@ struct AlbumThumbnailView: View {
                     
                 Text(album.name)
                     .font(.subheadline)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
                 Text("\(album.photos.count)")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
