@@ -31,6 +31,7 @@ struct AlbumListView: View {
                                                isShowingAlert: $isShowingAlert,
                                                isEditing: isEditing,
                                                album: album)
+                            .contentShape(Rectangle())
                             .aspectRatio(0.8, contentMode: .fill)
                         }
                     }

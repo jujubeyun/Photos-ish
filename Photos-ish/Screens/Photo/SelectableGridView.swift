@@ -27,6 +27,7 @@ struct SelectableGridView: View {
                     ForEach(photos, id: \.self) { photo in
                         let isSelected = selectedPhotos.contains(photo)
                         RemoteImageView(photo: photo, imageContentMode: .fill, shouldShowFavoriteMark: true, isGrid: true)
+                            .contentShape(Rectangle())
                             .aspectRatio(1, contentMode: .fit)
                             .opacity(isSelected ? 0.5 : 1.0)
                             .onTapGesture {
