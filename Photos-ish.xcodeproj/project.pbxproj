@@ -64,7 +64,6 @@
 			isa = PBXGroup;
 			children = (
 				6B50AB052C664ED9001B2624 /* AlbumListView.swift */,
-				6B8380812C689197001E8EBA /* AlbumThumbnailView.swift */,
 			);
 			path = Album;
 			sourceTree = "<group>";
@@ -90,6 +89,7 @@
 		6B6BE1022C6BA6B500299624 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				6B8380812C689197001E8EBA /* AlbumThumbnailView.swift */,
 				6BFD55B72C65FFC700924393 /* RemoteImageView.swift */,
 				6B50AB012C660B3D001B2624 /* LoadingView.swift */,
 				6B6BE1072C6CBC7400299624 /* FavoriteMark.swift */,

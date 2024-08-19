@@ -41,7 +41,7 @@ struct RemoteImageView: View {
     
     var body: some View {
         Rectangle()
-            .onAppear { imageLoader.load(fromURLString: photo.url, size: isGrid ? 150 : 300) }
+            .onAppear { imageLoader.load(fromURLString: photo.url, size: Int(isGrid ? 200 : UIScreen.main.bounds.width)) }
             .foregroundColor(.clear)
             .overlay {
                 GeometryReader { geometry in
