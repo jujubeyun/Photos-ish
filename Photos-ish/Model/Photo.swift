@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-class Photo: Hashable {
+class Photo {
     @Attribute(.unique) let id = UUID()
     let url: String
     let date: Date
