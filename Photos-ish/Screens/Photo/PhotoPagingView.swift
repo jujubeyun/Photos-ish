@@ -35,6 +35,9 @@ struct PhotoPagingView: View {
         .scrollIndicators(.hidden)
         .scrollPosition(id: $scrolledID)
         .ignoresSafeArea()
+        .onChange(of: photos) { oldValue, newValue in
+            updateScrolledID(from: oldValue, to: newValue)
+        }
         .toolbar {
             ToolbarItemGroup(placement: .bottomBar) {
                 let imageName = scrolledID?.isFavorite ?? false ? "heart.fill" : "heart"
@@ -83,6 +86,17 @@ struct PhotoPagingView: View {
     private func dismissIfAlbumIsEmpty() {
         if album.photos.isEmpty {
             dismiss()
+        }
+    }
+    
+    private func updateScrolledID(from oldValue: [Photo], to newValue: [Photo]) {
+        guard let photo = scrolledID,
+              let photoIndex = oldValue.firstIndex(of: photo) else { return }
+        
+        if let updatedID = newValue[safe: photoIndex] {
+            scrolledID = updatedID
+        } else {
+            scrolledID = newValue.last
         }
     }
 }
