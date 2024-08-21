@@ -12,7 +12,7 @@ struct GridView: View {
     @Query(sort: [SortDescriptor<Album>(\.date, order: .forward)]) private var albums: [Album]
     @State private var scrolledID: Photo?
     @State private var isAddingPhotos = false
-    @State private var isLandscape: Bool = false
+    let isLandscape: Bool
     let album: Album
     let photos: [Photo]
     
@@ -41,10 +41,7 @@ struct GridView: View {
             }
         }
         .sheet(isPresented: $isAddingPhotos) {
-            SelectableGridView(isAddingPhotos: $isAddingPhotos, album: album)
-        }
-        .onRotate { orientation in
-            isLandscape = orientation.isLandscape
+            SelectableGridView(isLandscape: isLandscape, isAddingPhotos: $isAddingPhotos, album: album)
         }
     }
     
@@ -58,7 +55,7 @@ struct GridView: View {
                 .foregroundStyle(.gray)
         }
         .padding()
-        .offset(y: -50)
+        .offset(y: isLandscape ? 0 : -50)
     }
     
     private var GridViewSection: some View {

@@ -12,7 +12,7 @@ struct SelectableGridView: View {
     @Environment(\.modelContext) private var context
     @Query(sort: [SortDescriptor<Photo>(\.date, order: .forward)]) private var photos: [Photo]
     @State private var selectedPhotos: [Photo] = []
-    @State private var isLandscape: Bool = false
+    let isLandscape: Bool
     @Binding var isAddingPhotos: Bool
     let album: Album
     
@@ -61,9 +61,6 @@ struct SelectableGridView: View {
                         isAddingPhotos = false
                     }
                 }
-            }
-            .onRotate { orientation in
-                isLandscape = orientation.isLandscape
             }
         }
     }

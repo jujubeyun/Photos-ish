@@ -15,7 +15,7 @@ struct AlbumListView: View {
     @State private var alertType: AlertType?
     @State private var titleText = ""
     @State private var isEditing = false
-    @State private var isLandscape: Bool = false
+    @State private var isLandscape: Bool = UIDevice.current.orientation.isLandscape
     
     var columnCount: Int {
         isLandscape ? 4 : 2
@@ -44,7 +44,7 @@ struct AlbumListView: View {
             }
             .navigationTitle("Albums")
             .navigationDestination(for: Album.self) { album in
-                GridView(album: album, photos: album.sortedPhotos)
+                GridView(isLandscape: isLandscape, album: album, photos: album.sortedPhotos)
             }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
