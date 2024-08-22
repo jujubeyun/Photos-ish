@@ -7,6 +7,12 @@
 * SwiftData
 * Swift Concurrency
 
+## 주요 기능
+- 앨범 생성 및 삭제
+- Landscape 모드
+- 좋아하는 사진 설정
+- 사진 Paging
+
 ## 구현 내용
 ### Preloading Data
 <img width="200" src="https://github.com/user-attachments/assets/2c1085e9-77b5-47d1-b684-64730d0b1655">
